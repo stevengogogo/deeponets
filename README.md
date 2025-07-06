@@ -1,6 +1,10 @@
 # deeponets: A collection of Deep Operator Networks (DeepONets) in PyTorch
 
 
+## Overview 
+
+This repository provides a collection of Deep Operator Networks (DeepONets) implemented in PyTorch.
+
 ## Installation 
 
 Installation 
