@@ -11,7 +11,7 @@ class ResidualBlock(nn.Module):
         `activation`: activation function (nn.ReLU() by default)
         `ln`: whether to use layer normalization. This can be batchnorm, layernorm, or None (default: identitiy).
         """
-        super(ResidualBlock, self).__init__()
+        super().__init__()
         self.layer1 = nn.Linear(in_channel, out_channel)
         self.layer2 = nn.Linear(out_channel, out_channel)
         self.ln = ln
@@ -56,3 +56,25 @@ class ResidualBlock(nn.Module):
         x = self.layer_in(x)
         o = x + o
         return o
+
+class MLP(nn.Module):
+    def __init__(self, dim_layers:list[int], activation=nn.ReLU(), final_activation=nn.Identity(),ln='batchnorm'):
+        """
+        `in_channel`: input dimension
+        `out_channel`: output dimension
+        `n_layer`: number of layers
+        `activation`: activation function (nn.ReLU() by default)
+        `ln`: whether to use layer normalization. This can be batchnorm, layernorm, or None (default: identitiy).
+        """
+        super().__init__()
+        layers = []
+        # Initial to hidden layers
+        for i in range(len(dim_layers) - 2):
+            in_channel, out_channel = dim_layers[i], dim_layers[i + 1]
+            layers.append(ResidualBlock(in_channel, out_channel, activation=activation, ln=ln))
+        # Final layer
+        layers.append(ResidualBlock(dim_layers[-2], dim_layers[-1], activation=final_activation, ln=ln))
+        self.layers = nn.Sequential(*layers)
+
+    def forward(self, x):
+        return self.layers(x)

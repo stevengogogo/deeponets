@@ -3,8 +3,11 @@ from deeponets import modules
 import torch.nn as nn
 import torch
 
-@pytest.mark.parametrize('ln', ['batchnorm', 'layernorm', 'None'])
-@pytest.mark.parametrize('activation', [nn.ReLU(), nn.Tanh(), nn.Identity()])
+TEST_LN = ['batchnorm', 'layernorm', 'None']
+TEST_ACTIVATION = [nn.ReLU(), nn.Tanh(), nn.Identity()]
+
+@pytest.mark.parametrize('ln', TEST_LN)
+@pytest.mark.parametrize('activation', TEST_ACTIVATION)
 @pytest.mark.parametrize('out_channel', [1, 5])
 @pytest.mark.parametrize('in_channel', [1, 5])
 def test_residual_block(in_channel, out_channel, activation, ln):
@@ -21,3 +24,21 @@ def test_residual_block(in_channel, out_channel, activation, ln):
     x = torch.randn(Nbatch, in_channel)
     y = block(x)
     assert y.shape == (Nbatch, out_channel) 
+
+@pytest.mark.parametrize('ln', TEST_LN)
+@pytest.mark.parametrize('activation', TEST_ACTIVATION)
+@pytest.mark.parametrize('final_activation', TEST_ACTIVATION)
+@pytest.mark.parametrize('dim_layers', [[1,2,4], [3,5,3]])
+def test_resmlp(dim_layers, activation, final_activation, ln):
+    mlp = modules.MLP(dim_layers=dim_layers, activation=activation, final_activation=final_activation, ln=ln)
+
+    Nbatch = 10 
+    NLength = 20
+    #(N,L,C)
+    x = torch.randn(Nbatch, NLength, dim_layers[0])
+    y = mlp(x)
+    assert y.shape == (Nbatch,NLength,dim_layers[-1])
+    #(N,C)
+    x = torch.randn(Nbatch, dim_layers[0])
+    y = mlp(x)
+    assert y.shape == (Nbatch, dim_layers[-1])
