@@ -12,6 +12,8 @@ torch = "^2.7.1"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
+pytest-benchmark = "^5.1.0"
 
 [build-system]
 requires = ["poetry-core"]
