@@ -2,10 +2,10 @@
 Test DeepONets collection
 """
 import torch
-from deeponets.models import DeepONet
+from deeponets.models import DeepONet, NOMDADDeepONet
 import pytest 
 
-@pytest.mark.parametrize("deeponet", [DeepONet])
+@pytest.mark.parametrize("deeponet", [DeepONet, NOMDADDeepONet])
 @pytest.mark.parametrize("n_branch", [1, 5])
 @pytest.mark.parametrize("n_trunk", [2])
 @pytest.mark.parametrize("ln", ['batchnorm', 'layernorm', 'None'])
