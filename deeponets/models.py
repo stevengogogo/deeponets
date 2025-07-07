@@ -3,10 +3,31 @@ Collection of DeepONets
 """
 import torch 
 import torch.nn as nn
+from functorch import make_functional
 from .modules import MLP
 
+class DeepONetBase(nn.Module):
+    def __init__(self, n_branch, n_trunk, n_inter, n_output):
+        """
+        Base class for DeepONet. This is an abstract class and should not be used directly.
+        `n_branch`: input dimension of branch net
+        `n_trunk`: input dimension of trunk net
+        `n_inter`: output dimension of branch net and trunk net
+        `n_output`: output dimension of DeepONet
+        """
+        super().__init__()
+        self.n_branch = n_branch 
+        self.n_trunk = n_trunk
+        self.n_inter = n_inter
+        self.n_output = n_output
+    def forward(self, x_branch:torch.Tensor, x_trunk:torch.Tensor):
+        """
+        x_branch: (n_batch, n_branch)
+        y_trunk: (n_batch, n_query, n_trunk)
+        """
+        raise NotImplementedError("DeepONet is not implemented yet. Please use UnstackDeepONet instead.")
 
-class UnstackDeepONet(nn.Module):
+class DeepONet(DeepONetBase):
     """
     Vanilla DeepONet 
     Ref: 
@@ -26,7 +47,7 @@ class UnstackDeepONet(nn.Module):
         `final_activation_trunk`: final activation function for trunk net (default: nn.Identity())
         `ln`: whether to use layer normalization
         """
-        super().__init__()
+        super().__init__(n_branch, n_trunk, n_inter, n_output=1)
         self.n_layers_branch = [n_branch, *hiddens_branch, n_inter]
         self.n_layers_trunk = [n_trunk, *hiddens_trunk, n_inter]
        
@@ -50,4 +71,4 @@ class UnstackDeepONet(nn.Module):
         # Inner product (batched)
         out = torch.bmm(trunk_out, branch_out) + self.bias # (n_batch, n_query, 1)
         return out
-    
+
