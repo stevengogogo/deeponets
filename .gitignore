@@ -1,0 +1,7 @@
+poetry.lock
+.pytest_cache
+__pycache__
+.vscode
+.python-version
+saved_models
+results
