@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Shao-Ting Chiu <stchiu@email.tamu.edu>"]
 readme = "README.md"
+packages = [
+    { include = "deeponets"},
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -14,6 +17,14 @@ torch = "^2.7.1"
 pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
 pytest-benchmark = "^5.1.0"
+
+
+[tool.poetry.group.exp.dependencies]
+wget = "^3.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]
