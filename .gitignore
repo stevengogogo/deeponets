@@ -5,3 +5,4 @@ __pycache__
 .python-version
 saved_models
 results
+*.npz
