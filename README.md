@@ -22,3 +22,8 @@ Installation
    ```bash
    poetry install
    ```
+
+
+## Example
+
+- [Antiderivative with NOMAD DeepONet](exps/antiderivative.py.ipynb)
